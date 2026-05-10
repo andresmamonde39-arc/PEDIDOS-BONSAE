@@ -1,0 +1,2105 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido de Compras — Bonsae</title>
+    <style>
+        :root {
+            --gd: #1a4a2e;
+            --gm: #2d7a4a;
+            --gl: #e8f5ed;
+            --gb: #a8d5b5;
+            --am: #b07d1a;
+            --al: #fdf4e0;
+            --ab: #e8c96b;
+            --rd: #8b2020;
+            --rl: #fdeaea;
+            --bl: #1a3a6b;
+            --bll: #e8eef8;
+            --bm: #2a5fa8;
+            --tx: #1c2420;
+            --tm: #5a6b62;
+            --br: #c8d8cc;
+            --bg: #f4f8f5;
+            --cd: #ffffff;
+            --font: 'Georgia', serif;
+            --sans: 'Arial', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--tx);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--gd);
+            color: white;
+            padding: 16px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid var(--gm);
+        }
+
+        .hbrand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--gm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-family: var(--font);
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        .header p {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 1px;
+        }
+
+        .hright {
+            text-align: right;
+            font-size: 11px;
+            opacity: 0.75;
+        }
+
+        .hright strong {
+            font-size: 15px;
+            font-weight: 700;
+            display: block;
+            opacity: 1;
+            letter-spacing: 0.5px;
+        }
+
+        .stepper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 20px;
+            background: white;
+            border-bottom: 1px solid var(--br);
+            flex-wrap: wrap;
+            gap: 2px;
+        }
+
+        .sdot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            border: 2px solid var(--br);
+            background: white;
+            color: var(--tm);
+            transition: all .3s;
+            flex-shrink: 0;
+        }
+
+        .sdot.active {
+            background: var(--gm);
+            border-color: var(--gm);
+            color: white;
+        }
+
+        .sdot.done {
+            background: var(--gd);
+            border-color: var(--gd);
+            color: white;
+        }
+
+        .slbl {
+            font-size: 10px;
+            color: var(--tm);
+            margin-left: 6px;
+            white-space: nowrap;
+        }
+
+        .slbl.active {
+            color: var(--gd);
+            font-weight: 700;
+        }
+
+        .sline {
+            width: 32px;
+            height: 2px;
+            background: var(--br);
+            flex-shrink: 0;
+            margin: 0 4px;
+        }
+
+        .sline.done {
+            background: var(--gd);
+        }
+
+        .main {
+            max-width: 840px;
+            margin: 22px auto;
+            padding: 0 14px 60px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--cd);
+            border: 1px solid var(--br);
+            border-radius: 10px;
+            padding: 22px 26px;
+            margin-bottom: 16px;
+        }
+
+        .ctitle {
+            font-family: var(--font);
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--gd);
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--br);
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .cicon {
+            width: 26px;
+            height: 26px;
+            border-radius: 5px;
+            background: var(--gl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .row {
+            display: grid;
+            gap: 13px;
+            margin-bottom: 13px;
+        }
+
+        .col2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .col3 {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .col1 {
+            grid-template-columns: 1fr;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .field label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--tm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .field label .req {
+            color: var(--rd);
+            margin-left: 2px;
+        }
+
+        .field label .opt {
+            color: #aaa;
+            margin-left: 4px;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 10px;
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            border: 1px solid var(--br);
+            border-radius: 6px;
+            padding: 8px 11px;
+            font-size: 13px;
+            font-family: var(--sans);
+            color: var(--tx);
+            background: white;
+            transition: border-color .2s, box-shadow .2s;
+            width: 100%;
+        }
+
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            outline: none;
+            border-color: var(--gm);
+            box-shadow: 0 0 0 3px rgba(45, 122, 74, .1);
+        }
+
+        .field textarea {
+            resize: vertical;
+            min-height: 68px;
+        }
+
+        .nivel-banner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 15px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            border: 1.5px solid;
+            transition: all .3s;
+        }
+
+        .nivel-1 {
+            background: var(--gl);
+            border-color: var(--gb);
+        }
+
+        .nivel-2 {
+            background: var(--al);
+            border-color: var(--ab);
+        }
+
+        .nivel-3 {
+            background: var(--rl);
+            border-color: #e8a0a0;
+        }
+
+        .nivel-icon {
+            font-size: 18px;
+        }
+
+        .nivel-text strong {
+            font-size: 13px;
+            font-weight: 700;
+            display: block;
+        }
+
+        .nivel-text span {
+            font-size: 11px;
+            color: var(--tm);
+        }
+
+        .nivel-badge {
+            margin-left: auto;
+            padding: 3px 11px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .nivel-1 .nivel-badge {
+            background: var(--gm);
+            color: white;
+        }
+
+        .nivel-2 .nivel-badge {
+            background: var(--am);
+            color: white;
+        }
+
+        .nivel-3 .nivel-badge {
+            background: var(--rd);
+            color: white;
+        }
+
+        .maq-panel {
+            background: #f0f7ff;
+            border: 1.5px solid #b0c8e8;
+            border-radius: 8px;
+            padding: 16px 18px;
+            margin-top: 13px;
+        }
+
+        .maq-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--bl);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+        }
+
+        .maq-divider {
+            font-size: 10px;
+            color: var(--tm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            margin: 14px 0 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--br);
+        }
+
+        .foto-area {
+            border: 2px dashed var(--br);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s;
+            background: white;
+        }
+
+        .foto-area:hover {
+            border-color: var(--gm);
+            background: var(--gl);
+        }
+
+        .foto-area p {
+            font-size: 12px;
+            color: var(--tm);
+            margin-top: 5px;
+        }
+
+        .foto-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .foto-thumb {
+            position: relative;
+            width: 70px;
+            height: 70px;
+        }
+
+        .foto-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid var(--br);
+        }
+
+        .del-foto {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--rd);
+            color: white;
+            font-size: 11px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 13px;
+        }
+
+        .items-table th {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--tm);
+            font-weight: 700;
+            padding: 7px 7px;
+            border-bottom: 2px solid var(--br);
+            text-align: left;
+            background: var(--bg);
+        }
+
+        .items-table td {
+            padding: 5px 4px;
+            border-bottom: 1px solid var(--bg);
+            vertical-align: middle;
+        }
+
+        .items-table tr:hover td {
+            background: var(--bg);
+        }
+
+        .items-table input,
+        .items-table select {
+            border: 1px solid var(--br);
+            border-radius: 5px;
+            padding: 5px 6px;
+            font-size: 12px;
+            width: 100%;
+            background: white;
+        }
+
+        .items-table input:focus,
+        .items-table select:focus {
+            outline: none;
+            border-color: var(--gm);
+        }
+
+        .btn-add {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 13px;
+            border-radius: 6px;
+            border: 1.5px dashed var(--gb);
+            background: var(--gl);
+            color: var(--gd);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .btn-add:hover {
+            background: var(--gm);
+            color: white;
+            border-style: solid;
+        }
+
+        .btn-rm {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--tm);
+            font-size: 15px;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .btn-rm:hover {
+            color: var(--rd);
+            background: var(--rl);
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 0 0;
+            border-top: 2px solid var(--br);
+            margin-top: 4px;
+        }
+
+        .total-lbl {
+            font-size: 11px;
+            color: var(--tm);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .total-val {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--gd);
+            font-family: var(--font);
+        }
+
+        .apro-chain {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .apro-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 13px;
+            border-radius: 8px;
+            border: 1px solid var(--br);
+            background: var(--bg);
+        }
+
+        .apro-step.req {
+            background: white;
+            border-color: var(--gb);
+        }
+
+        .apro-circle {
+            width: 33px;
+            height: 33px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .ac-g {
+            background: var(--gm);
+            color: white;
+        }
+
+        .ac-a {
+            background: var(--am);
+            color: white;
+        }
+
+        .ac-r {
+            background: var(--rd);
+            color: white;
+        }
+
+        .ac-x {
+            background: var(--br);
+            color: var(--tm);
+        }
+
+        .apro-info strong {
+            font-size: 13px;
+            font-weight: 700;
+            display: block;
+        }
+
+        .apro-info span {
+            font-size: 11px;
+            color: var(--tm);
+        }
+
+        .apro-tag {
+            margin-left: auto;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 9px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .at-r {
+            background: var(--gl);
+            color: var(--gd);
+            border: 1px solid var(--gb);
+        }
+
+        .at-o {
+            background: var(--bg);
+            color: var(--tm);
+            border: 1px solid var(--br);
+        }
+
+        .tab-group {
+            display: flex;
+            border-bottom: 2px solid var(--br);
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--tm);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all .2s;
+        }
+
+        .tab.active {
+            color: var(--gd);
+            border-bottom-color: var(--gm);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .res-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+            margin-bottom: 16px;
+        }
+
+        .res-item {
+            background: var(--bg);
+            border-radius: 7px;
+            padding: 9px 12px;
+        }
+
+        .res-item .lbl {
+            font-size: 10px;
+            color: var(--tm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .res-item .val {
+            font-size: 13px;
+            color: var(--tx);
+            font-weight: 500;
+        }
+
+        .res-item.full {
+            grid-column: 1/-1;
+        }
+
+        .res-item.accent {
+            background: var(--gl);
+            border: 1px solid var(--gb);
+        }
+
+        .cc-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 9px;
+            background: var(--bll);
+            border: 1px solid #b0c4e8;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--bl);
+        }
+
+        .mail-preview {
+            background: #fafbfc;
+            border: 1px solid var(--br);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .mail-header {
+            background: white;
+            border-bottom: 1px solid var(--br);
+            padding: 11px 15px;
+        }
+
+        .mail-field {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+            padding: 2px 0;
+        }
+
+        .mail-field span:first-child {
+            font-weight: 700;
+            color: var(--tm);
+            min-width: 50px;
+        }
+
+        .mail-body {
+            padding: 14px 16px;
+            font-size: 11.5px;
+            line-height: 1.75;
+            color: var(--tx);
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .mail-actions {
+            padding: 10px 15px;
+            background: white;
+            border-top: 1px solid var(--br);
+            display: flex;
+            gap: 9px;
+            align-items: center;
+        }
+
+        .confirm-box {
+            text-align: center;
+            padding: 44px 28px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--gb);
+        }
+
+        .confirm-icon {
+            font-size: 50px;
+            margin-bottom: 14px;
+        }
+
+        .confirm-box h2 {
+            font-family: var(--font);
+            font-size: 22px;
+            color: var(--gd);
+            margin-bottom: 8px;
+        }
+
+        .confirm-box p {
+            color: var(--tm);
+            font-size: 13px;
+        }
+
+        .confirm-num {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--gm);
+            margin: 10px 0;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 18px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .btn-sec {
+            background: white;
+            border: 1.5px solid var(--br);
+            color: var(--tm);
+        }
+
+        .btn-sec:hover {
+            border-color: var(--gm);
+            color: var(--gd);
+        }
+
+        .btn-pri {
+            background: var(--gd);
+            color: white;
+        }
+
+        .btn-pri:hover {
+            background: var(--gm);
+        }
+
+        .btn-blu {
+            background: var(--bl);
+            color: white;
+        }
+
+        .btn-blu:hover {
+            background: var(--bm);
+        }
+
+        .btn-ok {
+            background: #1a6b3a;
+            color: white;
+            font-size: 14px;
+            padding: 12px 28px;
+        }
+
+        .btn-ok:hover {
+            background: var(--gm);
+        }
+
+        .sep {
+            height: 1px;
+            background: var(--br);
+            margin: 14px 0;
+        }
+
+        @media(max-width:600px) {
+
+            .col2,
+            .col3 {
+                grid-template-columns: 1fr
+            }
+
+            .res-grid {
+                grid-template-columns: 1fr
+            }
+
+            .sline {
+                width: 16px
+            }
+
+            .slbl {
+                display: none
+            }
+
+            .card {
+                padding: 16px 13px
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:10000;display:flex;align-items:center;justify-content:center">
+      <div style="background:#fff;border-radius:16px;padding:40px 36px;max-width:420px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.12);text-align:center">
+        <div style="width:64px;height:64px;background:var(--gd);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;color:#fff;font-weight:800">BS</div>
+        <h2 style="color:var(--gd);margin:0 0 4px;font-size:22px">Bonsae · Pedido de Compras</h2>
+        <p style="color:var(--tm);font-size:13px;margin:0 0 24px">Identifique-se com seu e-mail corporativo</p>
+        <input type="email" id="login-email" placeholder="seu.email@bonsae.com" 
+          style="width:100%;padding:12px 16px;border:2px solid var(--br);border-radius:8px;font-size:15px;box-sizing:border-box;text-align:center;outline:none;transition:border .2s"
+          onfocus="this.style.borderColor='var(--gm)'" onblur="this.style.borderColor='var(--br)'"
+          onkeydown="if(event.key==='Enter') doLogin()">
+        <button onclick="doLogin()" id="login-btn"
+          style="width:100%;margin-top:14px;padding:12px;background:var(--gd);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s"
+          onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Entrar</button>
+        <div id="login-error" style="display:none;margin-top:12px;padding:10px 14px;background:var(--rl);color:var(--rd);border-radius:8px;font-size:13px"></div>
+        <p style="color:#aaa;font-size:11px;margin-top:20px">Acesso restrito a usuários autorizados</p>
+      </div>
+    </div>
+
+    <!-- MAIN APP (hidden until login) -->
+    <div id="app-container" style="display:none">
+
+    <div class="header">
+        <div class="hbrand">
+            <div class="logo">BS</div>
+            <div>
+                <h1>Bonsae · Pedido de Compras</h1>
+                <p>Sistema de Gestão de Aquisições — Luquembo, Angola</p>
+            </div>
+        </div>
+        <div class="hright">
+            <strong id="num-pedido">PC-2026-001</strong>
+            <span id="fecha-hdr"></span>
+            <div id="user-info" style="font-size:11px;color:rgba(255,255,255,.7);margin-top:2px">
+              <span id="user-name-hdr"></span> · <a href="#" onclick="doLogout();return false" style="color:rgba(255,255,255,.9);text-decoration:underline">Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="stepper">
+        <div style="display:flex;align-items:center">
+            <div class="sdot active" id="dot-1">1</div><span class="slbl active" id="lbl-1">Dados gerais</span>
+        </div>
+        <div class="sline" id="line-1"></div>
+        <div style="display:flex;align-items:center">
+            <div class="sdot" id="dot-2">2</div><span class="slbl" id="lbl-2">Itens</span>
+        </div>
+        <div class="sline" id="line-2"></div>
+        <div style="display:flex;align-items:center">
+            <div class="sdot" id="dot-3">3</div><span class="slbl" id="lbl-3">Aprovação</span>
+        </div>
+        <div class="sline" id="line-3"></div>
+        <div style="display:flex;align-items:center">
+            <div class="sdot" id="dot-4">4</div><span class="slbl" id="lbl-4">Resumo & Mail</span>
+        </div>
+    </div>
+
+    <div class="main">
+
+        <!-- PAGE 1 -->
+        <div class="page active" id="page-1">
+            <div class="card">
+                <div class="ctitle">
+                    <div class="cicon">📋</div>Informações do solicitante
+                </div>
+                <div class="row col3">
+                    <div class="field"><label>Solicitante <span class="req">*</span></label><input type="text"
+                            id="solicitante" placeholder="Nome completo"></div>
+                    <div class="field"><label>Data do pedido <span class="req">*</span></label><input type="date"
+                            id="fecha"></div>
+                    <div class="field"><label>Prioridade <span class="req">*</span></label>
+                        <select id="prioridade">
+                            <option value="Normal">🟢 Normal (5–7 dias)</option>
+                            <option value="Urgente">🟡 Urgente (24–48 hs)</option>
+                            <option value="Crítico">🔴 Crítico (mesmo dia)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row col2">
+                    <div class="field"><label>Tipo de compra <span class="req">*</span></label>
+                        <select id="tipo-compra" onchange="onTipoChange()">
+                            <option value="">Selecionar...</option>
+                            <option value="insumos">Insumos agrícolas</option>
+                            <option value="pecas">Peças e maquinário</option>
+                            <option value="combustivel">Combustível / Lubrificantes</option>
+                            <option value="cozinha">Cozinha / Acampamento</option>
+                            <option value="ferramentas">Ferramentas</option>
+                            <option value="servicos">Serviços externos</option>
+                            <option value="escritorio">Material de escritório / TI</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="field"><label>Centro de custo <span class="req">*</span></label>
+                        <select id="centro-custo">
+                            <option value="">Selecionar...</option>
+                            <optgroup label="Produção e Beneficiamento">
+                                <option value="CC-01">CC-01 · Produção Agrícola</option>
+                                <option value="CC-02">CC-02 · Beneficiamento</option>
+                            </optgroup>
+                            <optgroup label="Infraestrutura e Logística">
+                                <option value="CC-03">CC-03 · Manutenção e Infraestrutura</option>
+                                <option value="CC-04">CC-04 · Logística e Distribuição</option>
+                                <option value="CC-05">CC-05 · Cozinha e Base de Vida</option>
+                            </optgroup>
+                            <optgroup label="Administração e Finanças">
+                                <option value="CC-06">CC-06 · Administração e Gestão</option>
+                                <option value="CC-07">CC-07 · Recursos Humanos</option>
+                                <option value="CC-08">CC-08 · Segurança e Higiene</option>
+                            </optgroup>
+                            <optgroup label="Investimentos e Expansão">
+                                <option value="CC-09">CC-09 · CAPEX e Investimentos</option>
+                            </optgroup>
+                            <optgroup label="Desenvolvimento Comercial">
+                                <option value="CC-10">CC-10 · Relações Comunitárias</option>
+                                <option value="CC-11">CC-11 · Comercial e Marketing</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+                <div class="row col1">
+                    <div class="field"><label>Justificativa / Observações <span class="req">*</span></label>
+                        <textarea id="justificativa"
+                            placeholder="Descreva a necessidade e o uso previsto dos materiais..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL EQUIPAMENTO -->
+            <div class="card" id="panel-maq" style="display:none;border-color:#b0c8e8">
+                <div class="ctitle">
+                    <div class="cicon" style="background:#e8eef8">🚜</div>Dados do equipamento
+                    <button type="button" onclick="openAddMaq()" style="margin-left:auto;background:#1a4a2e;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:12px;cursor:pointer;font-weight:600">＋ Nova máquina</button>
+                </div>
+                <div class="row col3">
+                    <div class="field"><label>Nº interno da máquina <span class="req">*</span></label>
+                        <select id="maq-interno" onchange="onMaqSelect()">
+                            <option value="">Carregando frota...</option>
+                        </select>
+                        <small id="frota-status" style="color:#888;font-size:11px"></small>
+                    </div>
+                    <div class="field"><label>Marca <span class="req">*</span></label>
+                        <select id="maq-marca">
+                            <option value="">—</option>
+                            <option>John Deere</option>
+                            <option>Case IH</option>
+                            <option>Valtra</option>
+                            <option>New Holland</option>
+                            <option>Komatsu</option>
+                            <option>Ford</option>
+                            <option>Mercedes-Benz</option>
+                            <option>Outra</option>
+                        </select>
+                    </div>
+                    <div class="field"><label>Modelo <span class="req">*</span></label><input type="text"
+                            id="maq-modelo" placeholder="Ex: 6130J, Puma 185..."></div>
+                </div>
+                <div class="row col3">
+                    <div class="field"><label>Tipo de máquina</label>
+                        <select id="maq-tipo">
+                            <option value="">Selecionar...</option>
+                            <option>Trator agrícola</option>
+                            <option>Colheitadeira</option>
+                            <option>Niveladora</option>
+                            <option>Plaina a laser</option>
+                            <option>Caminhão</option>
+                            <option>Gerador</option>
+                            <option>Bomba de irrigação</option>
+                            <option>Pulverizador</option>
+                            <option>Outro</option>
+                        </select>
+                    </div>
+                    <div class="field"><label>Nº chassi / série <span class="opt">(opcional)</span></label><input
+                            type="text" id="maq-chasis" placeholder="Ex: 1RW6130JLCK..."></div>
+                    <div class="field"><label>Horímetro atual (h) <span class="opt">(opcional)</span></label><input
+                            type="number" id="maq-horimetro" placeholder="Ex: 3.450"></div>
+                </div>
+
+                <!-- SUB-PANEL PEÇAS -->
+                <div id="panel-pecas" style="display:none">
+                    <div class="sep"></div>
+                    <div class="maq-divider">🔧 Dados da peça / reparo</div>
+                    <div class="row col3">
+                        <div class="field"><label>Número de peça (fabricante) <span class="req">*</span></label><input
+                                type="text" id="rep-num" placeholder="Ex: RE504836"></div>
+                        <div class="field"><label>Código OEM / catálogo <span
+                                    class="opt">(opcional)</span></label><input type="text" id="rep-oem"
+                                placeholder="Ex: AH212949"></div>
+                        <div class="field"><label>Tipo de manutenção <span class="req">*</span></label>
+                            <select id="rep-tipo">
+                                <option value="">Selecionar...</option>
+                                <option value="prev">Preventivo (PM)</option>
+                                <option value="corr">Corretivo / Falha</option>
+                                <option value="acc">Acidente / Dano externo</option>
+                                <option value="mej">Melhoria / Upgrade</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row col1">
+                        <div class="field"><label>Descrição da falha / motivo do reparo <span
+                                    class="req">*</span></label>
+                            <textarea id="rep-falla"
+                                placeholder="Descreva o sintoma observado, quando ocorreu e impacto operacional..."
+                                style="min-height:60px"></textarea>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
+                    <div class="maq-divider">📷 Foto do repuesto / avaria <span
+                            style="font-weight:400;color:var(--tm);text-transform:none;letter-spacing:0">(opcional mas
+                            recomendado)</span></div>
+                    <div class="foto-area" onclick="document.getElementById('foto-input').click()">
+                        <div style="font-size:26px">📷</div>
+                        <p>Clique para anexar fotos ou arraste aqui</p>
+                        <p style="font-size:10px;margin-top:2px">JPG, PNG, HEIC — máx. 5 MB por foto</p>
+                    </div>
+                    <input type="file" id="foto-input" accept="image/*" multiple style="display:none"
+                        onchange="onFotoSelect(this.files)">
+                    <div class="foto-preview" id="foto-preview"></div>
+                </div>
+
+                <!-- SUB-PANEL COMBUSTÍVEL -->
+                <div id="panel-comb" style="display:none">
+                    <div class="sep"></div>
+                    <div class="maq-divider">⛽ Dados do abastecimento</div>
+                    <div class="row col3">
+                        <div class="field"><label>Tipo de combustível</label>
+                            <select id="comb-tipo">
+                                <option>Diesel B7</option>
+                                <option>Diesel B10</option>
+                                <option>Gasolina</option>
+                                <option>Lubrificante / Óleo</option>
+                                <option>Outro</option>
+                            </select>
+                        </div>
+                        <div class="field"><label>Hodômetro / horímetro atual</label><input type="number"
+                                id="comb-odometro" placeholder="Ex: 3.450"></div>
+                        <div class="field"><label>Operação associada</label><input type="text" id="comb-operacao"
+                                placeholder="Ex: Preparo solo Talhão 5"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <span></span>
+                <button class="btn btn-pri" onclick="goPage(2)">Próximo: Itens →</button>
+            </div>
+        </div>
+
+        <!-- PAGE 2 -->
+        <div class="page" id="page-2">
+            <div class="card">
+                <div class="ctitle">
+                    <div class="cicon">📦</div>Itens solicitados
+                </div>
+                <div class="nivel-banner nivel-1" id="nivel-banner">
+                    <div class="nivel-icon">✅</div>
+                    <div class="nivel-text">
+                        <strong id="nivel-titulo">Aprovação direta</strong>
+                        <span id="nivel-desc">Total até AOA 5.000.000 — Director Financeiro (DF)</span>
+                    </div>
+                    <div class="nivel-badge" id="nivel-badge">Nível 1</div>
+                </div>
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th style="width:28%">Descrição do item</th>
+                            <th style="width:9%">Unid.</th>
+                            <th style="width:8%">Qtd.</th>
+                            <th style="width:15%">Preço unit. (AOA)</th>
+                            <th style="width:12%">Subtotal</th>
+                            <th style="width:22%">Nº peça / referência</th>
+                            <th style="width:6%"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="items-body"></tbody>
+                </table>
+                <button class="btn-add" onclick="addItem()">+ Adicionar item</button>
+                <div class="total-row">
+                    <span class="total-lbl">Total estimado</span>
+                    <span class="total-val" id="total-display">AOA 0.00</span>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-sec" onclick="goPage(1)">← Voltar</button>
+                <button class="btn btn-pri" onclick="goPage(3)">Próximo: Aprovação →</button>
+            </div>
+        </div>
+
+        <!-- PAGE 3 -->
+        <div class="page" id="page-3">
+            <div class="card">
+                <div class="ctitle">
+                    <div class="cicon">✍️</div>Cadeia de aprovação
+                </div>
+                <div id="apro-chain" class="apro-chain"></div>
+            </div>
+            <div class="card">
+                <div class="ctitle">
+                    <div class="cicon">📎</div>Observações para aprovadores
+                </div>
+                <div class="row col1">
+                    <div class="field"><label>Comentários adicionais <span class="opt">(opcional)</span></label>
+                        <textarea id="obs-apro"
+                            placeholder="Impacto operacional em caso de atraso, alternativas avaliadas, fornecedor sugerido..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-sec" onclick="goPage(2)">← Voltar</button>
+                <button class="btn btn-pri" onclick="goPage(4)">Próximo: Resumo & Mail →</button>
+            </div>
+        </div>
+
+        <!-- PAGE 4 -->
+        <div class="page" id="page-4">
+            <div class="tab-group">
+                <div class="tab active" onclick="switchTab('resumo',this)">📋 Resumo</div>
+                <div class="tab" onclick="switchTab('mail',this)">✉️ E-mail</div>
+            </div>
+
+            <div class="tab-panel active" id="tab-resumo">
+                <div class="card">
+                    <div class="res-grid" id="resumen-grid"></div>
+                    <div id="resumen-maq"></div>
+                    <div id="resumen-items"></div>
+                </div>
+            </div>
+
+            <div class="tab-panel" id="tab-mail">
+                <div class="card">
+                    <div class="ctitle">
+                        <div class="cicon">✉️</div>E-mail gerado automaticamente
+                    </div>
+                    <div class="row col2" style="margin-bottom:14px">
+                        <div class="field"><label>Para (destinatário) <span class="req">*</span></label><input
+                                type="email" id="mail-to" placeholder="chefe.compras@bonsae.com"></div>
+                        <div class="field"><label>CC <span class="opt">(opcional)</span></label><input type="email"
+                                id="mail-cc" placeholder="gerencia@bonsae.com"></div>
+                    </div>
+                    <div class="mail-preview">
+                        <div class="mail-header">
+                            <div class="mail-field"><span>Para:</span><span id="prev-to">—</span></div>
+                            <div class="mail-field"><span>CC:</span><span id="prev-cc">—</span></div>
+                            <div class="mail-field"><span>Assunto:</span><span id="prev-subject"
+                                    style="font-weight:700">—</span></div>
+                        </div>
+                        <div class="mail-body" id="prev-body">—</div>
+                    </div>
+                    <div class="mail-actions">
+                        <button class="btn btn-sec" onclick="copyMail()">📋 Copiar texto</button>
+                        <button class="btn btn-blu" onclick="openMailClient()">📨 Abrir no cliente de e-mail</button>
+                        <span id="copy-ok" style="font-size:12px;color:var(--gm);display:none">✓ Copiado!</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-sec" onclick="goPage(3)">← Voltar</button>
+                <button class="btn btn-ok" onclick="submitPedido()">✔ Confirmar e Registrar Pedido</button>
+            </div>
+        </div>
+
+        <!-- PAGE 5 -->
+        <div class="page" id="page-5">
+            <div class="confirm-box">
+                <div class="confirm-icon">✅</div>
+                <h2>Pedido registrado com sucesso</h2>
+                <div class="confirm-num" id="confirm-num">PC-2026-001</div>
+                <p id="confirm-nivel"></p>
+                <p id="confirm-extra" style="margin-top:6px;font-size:12px;color:var(--gm);font-weight:700"></p>
+                <div id="confirm-url" style="margin-top:10px"></div>
+                <p style="margin-top:8px;font-size:11px;color:#999">Registre este número na plataforma de gestão Bonsae.
+                </p>
+                <button class="btn btn-pri" style="margin-top:22px" onclick="novoPedido()">+ Novo pedido</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentPage = 1, itemCount = 0, fotos = [];
+        let pedidoNum = genNum();
+
+        function genNum() { return `PC-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 900) + 100)}`; }
+
+        // INIT
+        document.getElementById('num-pedido').textContent = pedidoNum;
+        const hoy = new Date();
+        document.getElementById('fecha-hdr').textContent = hoy.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+        document.getElementById('fecha').value = hoy.toISOString().split('T')[0];
+        addItem(); addItem();
+
+        // TIPO CHANGE
+        function onTipoChange() {
+            const v = document.getElementById('tipo-compra').value;
+            const needsMaq = ['pecas', 'combustivel', 'ferramentas'].includes(v);
+            document.getElementById('panel-maq').style.display = needsMaq ? 'block' : 'none';
+            document.getElementById('panel-pecas').style.display = v === 'pecas' ? 'block' : 'none';
+            document.getElementById('panel-comb').style.display = v === 'combustivel' ? 'block' : 'none';
+            const cc = document.getElementById('centro-custo');
+            if (!cc.value) {
+                const m = { insumos: 'CC-01', pecas: 'CC-03', combustivel: 'CC-03', cozinha: 'CC-05', ferramentas: 'CC-03', servicos: 'CC-06', escritorio: 'CC-06' };
+                if (m[v]) cc.value = m[v];
+            }
+        }
+
+        // MAQ DATA
+        // MAQ e onMaqSelect agora são dinâmicos — carregados do Google Sheets (ver script no final)
+
+        // FOTOS
+        function onFotoSelect(files) { Array.from(files).forEach(addFoto); }
+        function addFoto(file) {
+            const id = Date.now() + Math.random();
+            fotos.push({ id, file });
+            const r = new FileReader();
+            r.onload = e => {
+                const p = document.getElementById('foto-preview');
+                const d = document.createElement('div');
+                d.className = 'foto-thumb'; d.id = 'ft-' + id;
+                d.innerHTML = `<img src="${e.target.result}"><button class="del-foto" onclick="delFoto(${id})">×</button>`;
+                p.appendChild(d);
+            };
+            r.readAsDataURL(file);
+        }
+        function delFoto(id) {
+            fotos = fotos.filter(f => f.id !== id);
+            const el = document.getElementById('ft-' + id); if (el) el.remove();
+        }
+
+        // ITEMS
+        function addItem() {
+            itemCount++;
+            const id = itemCount;
+            const tr = document.createElement('tr');
+            tr.id = 'ir-' + id;
+            tr.innerHTML = `
+    <td><input type="text" placeholder="Nome / descrição" onchange="calcTotal()"></td>
+    <td><select onchange="calcTotal()"><option>un</option><option>kg</option><option>lt</option><option>m</option><option>m²</option><option>cx</option><option>sc</option><option>hr</option><option>vb</option><option>par</option></select></td>
+    <td><input type="number" min="1" value="1" style="text-align:right" oninput="calcTotal()"></td>
+    <td><input type="number" min="0" step="0.01" placeholder="0.00" style="text-align:right" oninput="calcTotal()"></td>
+    <td id="sub-${id}" style="font-weight:700;font-size:12px;padding-left:6px;color:var(--gd)">—</td>
+    <td><input type="text" placeholder="Nº peça / referência" style="font-size:11px"></td>
+    <td><button class="btn-rm" onclick="removeItem(${id})">×</button></td>`;
+            document.getElementById('items-body').appendChild(tr);
+            calcTotal();
+        }
+        function removeItem(id) { const r = document.getElementById('ir-' + id); if (r) r.remove(); calcTotal(); }
+        function calcTotal() {
+            let t = 0;
+            document.querySelectorAll('#items-body tr').forEach(row => {
+                const n = row.querySelectorAll('input[type="number"]');
+                if (n.length >= 2) {
+                    const sub = (parseFloat(n[0].value) || 0) * (parseFloat(n[1].value) || 0);
+                    const sc = row.querySelector('td:nth-child(5)');
+                    if (sc) sc.textContent = sub > 0 ? 'AOA ' + sub.toLocaleString('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—';
+                    t += sub;
+                }
+            });
+            document.getElementById('total-display').textContent = 'AOA ' + t.toLocaleString('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            updateNivel(t);
+        }
+        function getTotal() {
+            let t = 0;
+            document.querySelectorAll('#items-body tr').forEach(row => {
+                const n = row.querySelectorAll('input[type="number"]');
+                if (n.length >= 2) t += (parseFloat(n[0].value) || 0) * (parseFloat(n[1].value) || 0);
+            });
+            return t;
+        }
+        function getNivel(t) { return t <= 5000000 ? 1 : t <= 30000000 ? 2 : 3; }
+        function updateNivel(t) {
+            const n = getNivel(t);
+            document.getElementById('nivel-banner').className = 'nivel-banner nivel-' + n;
+            const c = [null,
+                { icon: '✅', tit: 'Director Financeiro (DF)', desc: 'Total até AOA 5.000.000', badge: 'Nível 1' },
+                { icon: '⚡', tit: 'Director Executivo (DE)', desc: 'Total AOA 5.000.001 – 30.000.000', badge: 'Nível 2' },
+                { icon: '🔴', tit: 'Comité Executivo (CE)', desc: 'Total acima de AOA 30.000.000', badge: 'Nível 3' },
+            ];
+            document.getElementById('nivel-banner').querySelector('.nivel-icon').textContent = c[n].icon;
+            document.getElementById('nivel-titulo').textContent = c[n].tit;
+            document.getElementById('nivel-desc').textContent = c[n].desc;
+            document.getElementById('nivel-badge').textContent = c[n].badge;
+        }
+
+        // APROVAÇÃO
+        function renderApro() {
+            const nv = getNivel(getTotal());
+            const steps = [
+                { n: 1, role: 'Solicitante', sub: 'Geração e envio do pedido', cl: 'ac-g', req: true },
+                { n: 2, role: 'Director Financeiro (DF)', sub: 'Aprovação até AOA 5.000.000 / Validação e cotação', cl: 'ac-a', req: nv >= 1 },
+                { n: 3, role: 'Director Executivo (DE)', sub: 'Aprovação até AOA 30.000.000', cl: 'ac-r', req: nv >= 2 },
+                { n: 4, role: 'Comité Executivo (CE)', sub: 'Aprovação final — valores acima de AOA 30.000.000', cl: 'ac-r', req: nv >= 3 },
+            ];
+            const ch = document.getElementById('apro-chain');
+            ch.innerHTML = '';
+            steps.forEach(s => {
+                const d = document.createElement('div');
+                d.className = 'apro-step' + (s.req ? ' req' : '');
+                d.innerHTML = `<div class="apro-circle ${s.req ? s.cl : 'ac-x'}">${s.n}</div>
+      <div class="apro-info"><strong>${s.role}</strong><span>${s.sub}</span></div>
+      <span class="apro-tag ${s.req ? 'at-r' : 'at-o'}">${s.req ? 'Requerido' : 'Não aplicável'}</span>`;
+                ch.appendChild(d);
+            });
+        }
+
+        // RESUMO
+        function renderResumen() {
+            const total = getTotal(), nv = getNivel(total);
+            const nvLbl = ['', 'Director Financeiro (≤AOA 5.000.000)', 'Director Executivo (AOA 5M–30M)', 'Comité Executivo (>AOA 30.000.000)'];
+            const cc = document.getElementById('centro-custo');
+            const ccTxt = cc.options[cc.selectedIndex]?.text || '—';
+            const tc = document.getElementById('tipo-compra');
+            const tcTxt = tc.options[tc.selectedIndex]?.text || '—';
+            const tipo2 = tc.value;
+
+            document.getElementById('resumen-grid').innerHTML = `
+    <div class="res-item"><div class="lbl">Nº Pedido</div><div class="val" style="font-weight:700;color:var(--gm)">${pedidoNum}</div></div>
+    <div class="res-item"><div class="lbl">Data</div><div class="val">${document.getElementById('fecha').value}</div></div>
+    <div class="res-item"><div class="lbl">Solicitante</div><div class="val">${document.getElementById('solicitante').value || '—'}</div></div>
+    <div class="res-item"><div class="lbl">Prioridade</div><div class="val">${document.getElementById('prioridade').value}</div></div>
+    <div class="res-item"><div class="lbl">Tipo de compra</div><div class="val">${tcTxt}</div></div>
+    <div class="res-item"><div class="lbl">Centro de custo</div><div class="val"><span class="cc-tag">${ccTxt}</span></div></div>
+    <div class="res-item full"><div class="lbl">Nível de aprovação</div><div class="val">${nvLbl[nv]}</div></div>
+    <div class="res-item full accent"><div class="lbl">Total estimado</div><div class="val" style="font-size:20px;color:var(--gd);font-weight:700">AOA ${total.toLocaleString('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div></div>`;
+
+            // Maq block
+            let maqHTML = '';
+            if (['pecas', 'combustivel', 'ferramentas'].includes(tipo2)) {
+                const interno = document.getElementById('maq-interno').value;
+                const marca = document.getElementById('maq-marca').value;
+                const modelo = document.getElementById('maq-modelo').value;
+                const chasis = document.getElementById('maq-chasis').value;
+                const hor = document.getElementById('maq-horimetro').value;
+                maqHTML = `<div style="background:#f0f7ff;border:1px solid #b0c8e8;border-radius:8px;padding:13px 15px;margin-bottom:14px">
+      <div style="font-size:10px;font-weight:700;color:var(--bl);text-transform:uppercase;letter-spacing:.5px;margin-bottom:9px">🚜 Equipamento</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;font-size:12px">
+        <div><span style="color:var(--tm);font-size:10px;display:block;font-weight:700;text-transform:uppercase">Nº interno</span>${interno || '—'}</div>
+        <div><span style="color:var(--tm);font-size:10px;display:block;font-weight:700;text-transform:uppercase">Marca / Modelo</span>${marca} ${modelo}</div>
+        <div><span style="color:var(--tm);font-size:10px;display:block;font-weight:700;text-transform:uppercase">Chassi / Série</span>${chasis || '—'}</div>
+        ${hor ? `<div><span style="color:var(--tm);font-size:10px;display:block;font-weight:700;text-transform:uppercase">Horímetro</span>${hor} h</div>` : ''}
+      </div>`;
+                if (tipo2 === 'pecas') {
+                    const np = document.getElementById('rep-num').value;
+                    const oem = document.getElementById('rep-oem').value;
+                    const rt = document.getElementById('rep-tipo');
+                    const rtTxt = rt.options[rt.selectedIndex]?.text || '—';
+                    const falla = document.getElementById('rep-falla').value;
+                    maqHTML += `<div style="margin-top:11px;padding-top:9px;border-top:1px dashed var(--br);display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;font-size:12px">
+        <div><span style="color:var(--tm);font-size:10px;display:block;font-weight:700;text-transform:uppercase">Nº peça</span>${np || '—'}</div>
+        <div><span style="color:var(--tm);font-size:10px;display:block;font-weight:700;text-transform:uppercase">Código OEM</span>${oem || '—'}</div>
+        <div><span style="color:var(--tm);font-size:10px;display:block;font-weight:700;text-transform:uppercase">Tipo manutenção</span>${rtTxt}</div>
+      </div>
+      ${falla ? `<div style="margin-top:9px;font-size:12px"><span style="color:var(--tm);font-size:10px;display:block;font-weight:700;text-transform:uppercase">Descrição da falha</span>${falla}</div>` : ''}
+      ${fotos.length ? `<div style="margin-top:7px;font-size:11px;color:var(--tm)">📷 ${fotos.length} foto(s) anexada(s)</div>` : ''}`;
+                }
+                maqHTML += '</div></div>';
+            }
+            document.getElementById('resumen-maq').innerHTML = maqHTML;
+
+            // Items
+            let rows = ''; let i = 1;
+            document.querySelectorAll('#items-body tr').forEach(row => {
+                const inputs = row.querySelectorAll('input[type="text"]');
+                const desc = inputs[0]?.value || '—';
+                const ref = inputs[1]?.value || '';
+                const unit = row.querySelector('select')?.value || 'un';
+                const nums = row.querySelectorAll('input[type="number"]');
+                const qty = parseFloat(nums[0]?.value) || 0;
+                const price = parseFloat(nums[1]?.value) || 0;
+                rows += `<tr>
+      <td style="padding:7px 8px;border-bottom:1px solid var(--bg)">${desc}${ref ? ` <span style="font-size:10px;color:var(--tm)">[${ref}]</span>` : ''}</td>
+      <td style="padding:7px 8px;border-bottom:1px solid var(--bg);text-align:center">${qty} ${unit}</td>
+      <td style="padding:7px 8px;border-bottom:1px solid var(--bg);text-align:right">AOA ${price.toLocaleString('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+      <td style="padding:7px 8px;border-bottom:1px solid var(--bg);text-align:right;font-weight:700">AOA ${(qty * price).toLocaleString('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+    </tr>`; i++;
+            });
+            document.getElementById('resumen-items').innerHTML = `
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead><tr>${['Descrição', 'Qtd.', 'P. Unit.', 'Subtotal'].map((h, i) => `<th style="text-align:${i > 1 ? 'right' : i === 1 ? 'center' : 'left'};font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--tm);padding:7px 8px;border-bottom:2px solid var(--br);background:var(--bg)">${h}</th>`).join('')}</tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr>
+        <td colspan="3" style="padding:9px 8px;text-align:right;font-weight:700;border-top:2px solid var(--br)">TOTAL</td>
+        <td style="padding:9px 8px;text-align:right;font-weight:700;font-size:15px;color:var(--gd);border-top:2px solid var(--br)">AOA ${total.toLocaleString('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+      </tr></tfoot>
+    </table>`;
+        }
+
+        // MAIL
+        function buildMailBody() {
+            const total = getTotal(), nv = getNivel(total);
+            const nvLbl = ['', 'Director Financeiro (DF)', 'Director Executivo (DE)', 'Comité Executivo (CE)'];
+            const sol = document.getElementById('solicitante').value || '—';
+            const fecha = document.getElementById('fecha').value;
+            const prior = document.getElementById('prioridade').value;
+            const cc = document.getElementById('centro-custo'); const ccTxt = cc.options[cc.selectedIndex]?.text || '—';
+            const tc = document.getElementById('tipo-compra'); const tcTxt = tc.options[tc.selectedIndex]?.text || '—';
+            const obs = document.getElementById('obs-apro').value;
+            const tipo2 = tc.value;
+
+            let maqSec = '';
+            if (['pecas', 'combustivel', 'ferramentas'].includes(tipo2)) {
+                const interno = document.getElementById('maq-interno').value;
+                const marca = document.getElementById('maq-marca').value;
+                const modelo = document.getElementById('maq-modelo').value;
+                const chasis = document.getElementById('maq-chasis').value;
+                const hor = document.getElementById('maq-horimetro').value;
+                maqSec = `\n─────────────────────────────────
+🚜 EQUIPAMENTO
+  Nº interno     : ${interno || '—'}
+  Marca / Modelo : ${marca} ${modelo}
+  Chassi / Série : ${chasis || '—'}
+  Horímetro      : ${hor ? hor + ' h' : '—'}`;
+                if (tipo2 === 'pecas') {
+                    const np = document.getElementById('rep-num').value;
+                    const oem = document.getElementById('rep-oem').value;
+                    const rt = document.getElementById('rep-tipo');
+                    const rtTxt = rt.options[rt.selectedIndex]?.text || '—';
+                    const falla = document.getElementById('rep-falla').value;
+                    maqSec += `\n\n🔧 DADOS DA PEÇA
+  Nº peça (fabricante) : ${np || '—'}
+  Código OEM / catálogo: ${oem || '—'}
+  Tipo de manutenção   : ${rtTxt}
+  Descrição da falha   : ${falla || '—'}
+  Fotos anexas         : ${fotos.length > 0 ? fotos.length + ' arquivo(s)' : 'Não'}`;
+                }
+            }
+
+            let itemsSec = '\n─────────────────────────────────\n📦 ITENS SOLICITADOS\n';
+            let idx = 1;
+            document.querySelectorAll('#items-body tr').forEach(row => {
+                const inputs = row.querySelectorAll('input[type="text"]');
+                const desc = inputs[0]?.value || '—';
+                const ref = inputs[1]?.value || '';
+                const unit = row.querySelector('select')?.value || 'un';
+                const nums = row.querySelectorAll('input[type="number"]');
+                const qty = parseFloat(nums[0]?.value) || 0;
+                const price = parseFloat(nums[1]?.value) || 0;
+                itemsSec += `\n  ${idx}. ${desc}${ref ? ' [Ref: ' + ref + ']' : ''}\n     ${qty} ${unit} × AOA ${price.toLocaleString('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} = AOA ${(qty * price).toLocaleString('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                idx++;
+            });
+            itemsSec += `\n\n  ► TOTAL ESTIMADO: AOA ${total.toLocaleString('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+            return `Prezado(a),
+
+Segue o pedido de compras nº ${pedidoNum} para sua análise e aprovação.
+
+─────────────────────────────────
+📋 DADOS DO PEDIDO
+  Nº Pedido      : ${pedidoNum}
+  Data           : ${fecha}
+  Solicitante    : ${sol}
+  Tipo de compra : ${tcTxt}
+  Centro de custo: ${ccTxt}
+  Prioridade     : ${prior}
+  Nível aprovação: ${nvLbl[nv]}
+${maqSec}
+${itemsSec}
+─────────────────────────────────
+${obs ? `💬 OBSERVAÇÕES\n  ${obs}\n\n─────────────────────────────────\n` : ''}
+Por favor, confirme a aprovação respondendo este e-mail ou registrando na plataforma de gestão Bonsae.
+
+Atenciosamente,
+${sol}
+Bonsae · Luquembo, Angola`;
+        }
+
+        function renderMail() {
+            const to = document.getElementById('mail-to').value;
+            const mc = document.getElementById('mail-cc').value;
+            const nv = getNivel(getTotal());
+            const prior = document.getElementById('prioridade').value;
+            const pref = prior === 'Crítico' ? '[CRÍTICO] ' : prior === 'Urgente' ? '[URGENTE] ' : '';
+            const tc = document.getElementById('tipo-compra');
+            const tcTxt = tc.options[tc.selectedIndex]?.text || 'Compra';
+            const cc2 = document.getElementById('centro-custo');
+            const ccCode = cc2.value || 'CC-???';
+            const subj = `${pref}${pedidoNum} · ${tcTxt} · ${ccCode} · Nível ${nv} · ${prior}`;
+            document.getElementById('prev-to').textContent = to || '(não informado)';
+            document.getElementById('prev-cc').textContent = mc || '—';
+            document.getElementById('prev-subject').textContent = subj;
+            document.getElementById('prev-body').textContent = buildMailBody();
+        }
+
+        function copyMail() {
+            const text = `Assunto: ${document.getElementById('prev-subject').textContent}\n\n${buildMailBody()}`;
+            navigator.clipboard.writeText(text).then(() => {
+                const ok = document.getElementById('copy-ok');
+                ok.style.display = 'inline';
+                setTimeout(() => ok.style.display = 'none', 2500);
+            });
+        }
+        function openMailClient() {
+            const to = encodeURIComponent(document.getElementById('mail-to').value);
+            const cc = encodeURIComponent(document.getElementById('mail-cc').value);
+            const subj = encodeURIComponent(document.getElementById('prev-subject').textContent);
+            const body = encodeURIComponent(buildMailBody());
+            window.location.href = `mailto:${to}?cc=${cc}&subject=${subj}&body=${body}`;
+        }
+
+        document.getElementById('mail-to').addEventListener('input', renderMail);
+        document.getElementById('mail-cc').addEventListener('input', renderMail);
+
+        // TABS
+        function switchTab(name, el) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('tab-' + name).classList.add('active');
+            if (name === 'mail') renderMail();
+        }
+
+        // NAV
+        function goPage(n) {
+            document.getElementById('page-' + currentPage).classList.remove('active');
+            document.getElementById('page-' + n).classList.add('active');
+            currentPage = n;
+            updateStepper();
+            if (n === 3) renderApro();
+            if (n === 4) { renderResumen(); renderMail(); }
+            window.scrollTo(0, 0);
+        }
+        function updateStepper() {
+            for (let i = 1; i <= 4; i++) {
+                const dot = document.getElementById('dot-' + i);
+                const lbl = document.getElementById('lbl-' + i);
+                dot.className = 'sdot'; lbl.className = 'slbl';
+                if (i < currentPage) { dot.classList.add('done'); dot.textContent = '✓'; }
+                else if (i === currentPage) { dot.classList.add('active'); dot.textContent = i; lbl.classList.add('active'); }
+                else { dot.textContent = i; }
+                if (i < 4) document.getElementById('line-' + i).className = 'sline' + (i < currentPage ? ' done' : '');
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════
+        // CONFIGURAÇÃO — ÚNICO CAMPO QUE PRECISA EDITAR
+        // Após publicar o Apps Script como Web App, cole a URL abaixo:
+        // Exemplo: https://script.google.com/macros/s/AKfycbx.../exec
+        // ══════════════════════════════════════════════════════════════
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzbF1X-fFg9sHeAn2jbUWq31z6iUyGGQ39R0iP1rrfEZoVq01zNNXl2Rhmd0Mvw4Tf_6Q/exec';
+        // ══════════════════════════════════════════════════════════════
+
+        // SUBMIT
+        async function submitPedido() {
+            const nv = getNivel(getTotal());
+            const msgs = ['', 'Encaminhado ao Director Financeiro (DF).', 'Encaminhado ao Director Executivo (DE).', 'Encaminhado ao Comité Executivo (CE).'];
+
+            // Coletar todos os itens
+            const itens = [];
+            document.querySelectorAll('#items-body tr').forEach(row => {
+                const inputs = row.querySelectorAll('input[type="text"]');
+                const nums = row.querySelectorAll('input[type="number"]');
+                const desc = inputs[0]?.value || '';
+                const ref = inputs[1]?.value || '';
+                const unit = row.querySelector('select')?.value || 'un';
+                const qty = parseFloat(nums[0]?.value) || 0;
+                const price = parseFloat(nums[1]?.value) || 0;
+                if (desc || qty) itens.push({ descricao: desc, unidade: unit, quantidade: qty, precoUnit: price, subtotal: qty * price, referencia: ref });
+            });
+
+            // Tipo compra texto
+            const tcEl = document.getElementById('tipo-compra');
+            const tcTxt = tcEl.options[tcEl.selectedIndex]?.text || '';
+            const tcVal = tcEl.value;
+
+            // Tipo manut texto
+            const rtEl = document.getElementById('rep-tipo');
+            const rtTxt = rtEl.options[rtEl.selectedIndex]?.text || '';
+
+            const payload = {
+                action: 'registrarPedido',
+                numPedido: pedidoNum,
+                dataPedido: document.getElementById('fecha').value,
+                solicitante: document.getElementById('solicitante').value,
+                area: document.getElementById('area')?.value || '',
+                centroCusto: document.getElementById('centro-custo').value,
+                tipoCompra: tcTxt,
+                tipoCompraVal: tcVal,
+                prioridade: document.getElementById('prioridade').value,
+                justificativa: document.getElementById('justificativa').value,
+                obsApro: document.getElementById('obs-apro').value,
+                totalEstimado: getTotal(),
+                nivel: nv,
+                itens: itens,
+                // Maquinário
+                maqInterno: document.getElementById('maq-interno')?.value || '',
+                maqMarca: document.getElementById('maq-marca')?.value || '',
+                maqModelo: document.getElementById('maq-modelo')?.value || '',
+                maqTipo: document.getElementById('maq-tipo')?.value || '',
+                maqChasis: document.getElementById('maq-chasis')?.value || '',
+                maqHorimetro: document.getElementById('maq-horimetro')?.value || '',
+                // Peça
+                repNumPeca: document.getElementById('rep-num')?.value || '',
+                repOEM: document.getElementById('rep-oem')?.value || '',
+                repTipoManut: rtTxt,
+                repDescFalha: document.getElementById('rep-falla')?.value || '',
+                fotosAnexas: fotos.length,
+                // Mail
+                mailTo: document.getElementById('mail-to').value,
+                mailCC: document.getElementById('mail-cc').value,
+                userEmail: CURRENT_USER ? CURRENT_USER.email : '',
+            };
+
+            // UI: mostrar loading
+            const btnOk = document.querySelector('.btn-ok');
+            const btnOrig = btnOk.innerHTML;
+            btnOk.innerHTML = '⏳ Enviando...';
+            btnOk.disabled = true;
+
+            // Verificar se URL foi configurada
+            if (APPS_SCRIPT_URL.includes('COLE_SUA_URL_AQUI')) {
+                // Modo demo: sem Apps Script configurado
+                console.log('PAYLOAD que seria enviado ao Apps Script:', payload);
+                setTimeout(() => {
+                    document.getElementById('confirm-num').textContent = pedidoNum;
+                    document.getElementById('confirm-nivel').textContent = msgs[nv];
+                    document.getElementById('confirm-extra').textContent = '⚠️ Modo demo: configure a URL do Apps Script no HTML para envio real.';
+                    goPage(5);
+                    btnOk.innerHTML = btnOrig; btnOk.disabled = false;
+                }, 800);
+                return;
+            }
+
+            try {
+                const fd = new FormData();
+                fd.append('data', JSON.stringify(payload));
+                const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: fd });
+                const json = await res.json();
+                if (json.ok) {
+                    document.getElementById('confirm-num').textContent = pedidoNum;
+                    document.getElementById('confirm-nivel').textContent = msgs[nv];
+
+                    // ── Upload de fotos ao Drive ──
+                    let fotosMsg = '';
+                    if (fotos.length > 0) {
+                        try {
+                            document.getElementById('confirm-extra').textContent = '⏳ Enviando ' + fotos.length + ' foto(s) ao Drive...';
+                            goPage(5);
+
+                            const fotosBase64 = await Promise.all(fotos.map(f => {
+                                return new Promise((resolve, reject) => {
+                                    const reader = new FileReader();
+                                    reader.onload = () => {
+                                        const b64 = reader.result.split(',')[1];
+                                        resolve({
+                                            name: f.file.name,
+                                            type: f.file.type,
+                                            base64: b64
+                                        });
+                                    };
+                                    reader.onerror = () => reject(new Error('Erro ao ler ' + f.file.name));
+                                    reader.readAsDataURL(f.file);
+                                });
+                            }));
+
+                            const fdFotos = new FormData();
+                            fdFotos.append('data', JSON.stringify({
+                                action: 'uploadFotos',
+                                numPedido: pedidoNum,
+                                usuario: document.getElementById('solicitante')?.value || '',
+                                fotos: fotosBase64
+                            }));
+
+                            const resFotos = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: fdFotos });
+                            const jsonFotos = await resFotos.json();
+
+                            if (jsonFotos.ok) {
+                                fotosMsg = '\n📷 ' + jsonFotos.links.length + ' foto(s) salvas no Drive.';
+                                if (jsonFotos.folderUrl) {
+                                    document.getElementById('confirm-url').innerHTML =
+                                        `<a href="${jsonFotos.folderUrl}" target="_blank" style="color:var(--gm);font-weight:700;font-size:13px">📂 Ver fotos no Drive</a>`;
+                                }
+                            } else {
+                                fotosMsg = '\n⚠ Fotos: ' + (jsonFotos.msg || 'erro no upload');
+                            }
+                        } catch(fotoErr) {
+                            console.error('Erro upload fotos:', fotoErr);
+                            fotosMsg = '\n⚠ Erro ao enviar fotos: ' + fotoErr.message;
+                        }
+                    }
+
+                    document.getElementById('confirm-extra').textContent =
+                        '✓ Registrado em Sheets e e-mail enviado.' + fotosMsg;
+                    if (!document.getElementById('confirm-url').innerHTML && json.urlPDF) {
+                        document.getElementById('confirm-url').innerHTML =
+                            `<a href="${json.urlPDF}" target="_blank" style="color:var(--gm);font-weight:700;font-size:13px">📄 Abrir PDF no Drive</a>`;
+                    }
+                    goPage(5);
+                } else {
+                    alert('Erro ao registrar: ' + (json.msg || 'Tente novamente.'));
+                }
+            } catch (err) {
+                alert('Erro de conexão com o Apps Script.\nVerifique a URL e as permissões.\n\n' + err.message);
+                console.error(err);
+            } finally {
+                btnOk.innerHTML = btnOrig; btnOk.disabled = false;
+            }
+        }
+        function novoPedido() {
+            pedidoNum = genNum();
+            document.getElementById('num-pedido').textContent = pedidoNum;
+            ['solicitante', 'maq-chasis', 'maq-modelo', 'maq-horimetro', 'rep-num', 'rep-oem', 'rep-falla',
+                'justificativa', 'obs-apro', 'mail-to', 'mail-cc', 'comb-odometro', 'comb-operacao'].forEach(id => {
+                    const el = document.getElementById(id); if (el) el.value = '';
+                });
+            ['tipo-compra', 'maq-interno', 'maq-marca', 'maq-tipo', 'rep-tipo', 'centro-custo'].forEach(id => {
+                const el = document.getElementById(id); if (el) el.selectedIndex = 0;
+            });
+            document.getElementById('panel-maq').style.display = 'none';
+            document.getElementById('panel-pecas').style.display = 'none';
+            document.getElementById('panel-comb').style.display = 'none';
+            document.getElementById('foto-preview').innerHTML = '';
+            document.getElementById('items-body').innerHTML = '';
+            fotos = []; itemCount = 0;
+            addItem(); addItem(); calcTotal();
+            goPage(1);
+        }
+    </script>
+
+    <!-- MODAL: ADICIONAR NOVA MÁQUINA -->
+    <div id="modal-maq" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center">
+      <div style="background:#fff;border-radius:12px;padding:28px 32px;max-width:520px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,.25)">
+        <h3 style="margin:0 0 4px;color:#1a4a2e;font-size:18px">🚜 Cadastrar nova máquina</h3>
+        <p style="margin:0 0 18px;font-size:13px;color:#666">Os dados serão salvos na planilha Google Sheets (aba Frota)</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div><label style="font-size:12px;font-weight:600;color:#555">Código *</label><input id="nm-codigo" placeholder="Ex: T-06, C-03..." style="width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:14px;box-sizing:border-box"></div>
+          <div><label style="font-size:12px;font-weight:600;color:#555">Tipo *</label>
+            <select id="nm-tipo" style="width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:14px;box-sizing:border-box">
+              <option value="">Selecionar...</option>
+              <option>Trator agrícola</option>
+              <option>Colheitadeira</option>
+              <option>Niveladora</option>
+              <option>Plaina a laser</option>
+              <option>Caminhão</option>
+              <option>Escavadeira</option>
+              <option>Motoniveladora</option>
+              <option>Implemento</option>
+              <option>Veículo leve</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div><label style="font-size:12px;font-weight:600;color:#555">Marca *</label><input id="nm-marca" placeholder="Ex: John Deere" style="width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:14px;box-sizing:border-box"></div>
+          <div><label style="font-size:12px;font-weight:600;color:#555">Modelo *</label><input id="nm-modelo" placeholder="Ex: 6130J" style="width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:14px;box-sizing:border-box"></div>
+          <div><label style="font-size:12px;font-weight:600;color:#555">Chassi / Série</label><input id="nm-chassi" placeholder="Opcional" style="width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:14px;box-sizing:border-box"></div>
+          <div><label style="font-size:12px;font-weight:600;color:#555">Ano</label><input id="nm-ano" type="number" placeholder="Opcional" style="width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:14px;box-sizing:border-box"></div>
+        </div>
+        <div id="nm-error" style="display:none;margin-top:10px;padding:8px 12px;background:#fdeaea;color:#8b2020;border-radius:6px;font-size:13px"></div>
+        <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end">
+          <button onclick="closeAddMaq()" style="padding:9px 20px;border:1px solid #ccc;background:#fff;border-radius:6px;cursor:pointer;font-size:14px">Cancelar</button>
+          <button onclick="submitAddMaq()" id="nm-btn" style="padding:9px 20px;border:none;background:#1a4a2e;color:#fff;border-radius:6px;cursor:pointer;font-size:14px;font-weight:600">Salvar máquina</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    // ═══════════════════════════════════════════════════════════
+    // FROTA DINÂMICA — Carrega máquinas do Google Sheets
+    // ═══════════════════════════════════════════════════════════
+
+    let FROTA = []; // array global com dados da frota
+
+    // Carregar frota ao abrir a página
+    async function loadFrota() {
+      const sel = document.getElementById('maq-interno');
+      const status = document.getElementById('frota-status');
+      try {
+        const url = APPS_SCRIPT_URL + '?action=getFrota';
+        const res = await fetch(url);
+        const json = await res.json();
+        if (json.ok && json.frota) {
+          FROTA = json.frota;
+          renderFrotaSelect();
+          if(status) status.textContent = FROTA.length + ' máquina(s) carregada(s)';
+          setTimeout(()=>{ if(status) status.textContent=''; }, 3000);
+        } else {
+          throw new Error(json.msg || 'Erro ao carregar frota');
+        }
+      } catch(err) {
+        console.warn('Erro ao carregar frota, usando lista local:', err);
+        if(status) status.textContent = '⚠ Frota local (offline)';
+        // Fallback: lista estática
+        FROTA = [
+          {codigo:'T-01',marca:'John Deere',modelo:'6130J',tipo:'Trator agrícola'},
+          {codigo:'T-02',marca:'John Deere',modelo:'6130J',tipo:'Trator agrícola'},
+          {codigo:'T-03',marca:'Case IH',modelo:'Puma 185',tipo:'Trator agrícola'},
+          {codigo:'T-04',marca:'Valtra',modelo:'A134',tipo:'Trator agrícola'},
+          {codigo:'T-05',marca:'Valtra',modelo:'A134',tipo:'Trator agrícola'},
+          {codigo:'C-01',marca:'John Deere',modelo:'S660',tipo:'Colheitadeira'},
+          {codigo:'C-02',marca:'Case IH',modelo:'7240',tipo:'Colheitadeira'},
+          {codigo:'N-01',marca:'John Deere',modelo:'Blade',tipo:'Niveladora'},
+          {codigo:'PL-01',marca:'—',modelo:'Plaina Laser',tipo:'Plaina a laser'},
+          {codigo:'CM-01',marca:'Ford',modelo:'Cargo',tipo:'Caminhão'},
+          {codigo:'CM-02',marca:'Mercedes-Benz',modelo:'1620',tipo:'Caminhão'},
+        ];
+        renderFrotaSelect();
+      }
+    }
+
+    function renderFrotaSelect() {
+      const sel = document.getElementById('maq-interno');
+      sel.innerHTML = '<option value="">Selecionar máquina...</option>';
+
+      // Agrupar por tipo
+      const grupos = {};
+      FROTA.forEach(m => {
+        if (m.status && m.status !== 'Ativo') return; // só mostrar ativos
+        if (!grupos[m.tipo]) grupos[m.tipo] = [];
+        grupos[m.tipo].push(m);
+      });
+
+      Object.keys(grupos).sort().forEach(tipo => {
+        const og = document.createElement('optgroup');
+        og.label = tipo;
+        grupos[tipo].forEach(m => {
+          const opt = document.createElement('option');
+          opt.value = m.codigo;
+          opt.textContent = m.codigo + ' · ' + m.marca + ' ' + m.modelo;
+          og.appendChild(opt);
+        });
+        sel.appendChild(og);
+      });
+
+      // Opção "outro"
+      const outro = document.createElement('option');
+      outro.value = 'outro';
+      outro.textContent = 'Outro / Não listado';
+      sel.appendChild(outro);
+    }
+
+    // Substituir o MAQ estático pelo FROTA dinâmico
+    function onMaqSelect() {
+      const code = document.getElementById('maq-interno').value;
+      const maq = FROTA.find(m => m.codigo === code);
+      if (maq) {
+        document.getElementById('maq-marca').value = maq.marca;
+        document.getElementById('maq-modelo').value = maq.modelo;
+        document.getElementById('maq-tipo').value = maq.tipo;
+      }
+    }
+
+    // ── MODAL: Adicionar nova máquina ──
+    function openAddMaq() {
+      document.getElementById('modal-maq').style.display = 'flex';
+      document.getElementById('nm-error').style.display = 'none';
+      ['nm-codigo','nm-marca','nm-modelo','nm-chassi','nm-ano'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('nm-tipo').value = '';
+    }
+
+    function closeAddMaq() {
+      document.getElementById('modal-maq').style.display = 'none';
+    }
+
+    async function submitAddMaq() {
+      const codigo = document.getElementById('nm-codigo').value.trim();
+      const marca  = document.getElementById('nm-marca').value.trim();
+      const modelo = document.getElementById('nm-modelo').value.trim();
+      const tipo   = document.getElementById('nm-tipo').value;
+      const chassi = document.getElementById('nm-chassi').value.trim();
+      const ano    = document.getElementById('nm-ano').value.trim();
+      const errEl  = document.getElementById('nm-error');
+      const btn    = document.getElementById('nm-btn');
+
+      if (!codigo || !marca || !modelo || !tipo) {
+        errEl.textContent = 'Preencha os campos obrigatórios: Código, Marca, Modelo e Tipo.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      // Verificar duplicado local
+      if (FROTA.find(m => m.codigo.toUpperCase() === codigo.toUpperCase())) {
+        errEl.textContent = 'O código "' + codigo + '" já existe na frota.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Salvando...';
+      errEl.style.display = 'none';
+
+      try {
+        const fd = new FormData();
+        fd.append('data', JSON.stringify({
+          action: 'addMaquina',
+          codigo, marca, modelo, tipo, chassi, ano,
+          usuario: document.getElementById('solicitante')?.value || ''
+        }));
+
+        const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: fd });
+        const json = await res.json();
+
+        if (json.ok && !json.duplicado) {
+          // Adicionar ao array local e atualizar select
+          FROTA.push({ codigo, marca, modelo, tipo, chassi, ano, status: 'Ativo' });
+          renderFrotaSelect();
+          // Selecionar a nova máquina
+          document.getElementById('maq-interno').value = codigo;
+          onMaqSelect();
+          closeAddMaq();
+          alert('✅ Máquina ' + codigo + ' cadastrada com sucesso!');
+        } else {
+          errEl.textContent = json.msg || 'Erro ao salvar.';
+          errEl.style.display = 'block';
+        }
+      } catch(err) {
+        errEl.textContent = 'Erro de conexão: ' + err.message;
+        errEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Salvar máquina';
+      }
+    }
+
+    // Carregar frota ao iniciar
+    document.addEventListener('DOMContentLoaded', loadFrota);
+    </script>
+
+    </div><!-- /app-container -->
+
+    <script>
+    // ═══════════════════════════════════════════════════════════
+    // LOGIN / AUTENTICAÇÃO POR E-MAIL
+    // ═══════════════════════════════════════════════════════════
+
+    let CURRENT_USER = null; // { email, nome, cargo }
+
+    async function doLogin() {
+      const emailInput = document.getElementById('login-email');
+      const email = emailInput.value.trim().toLowerCase();
+      const errEl = document.getElementById('login-error');
+      const btn   = document.getElementById('login-btn');
+
+      if (!email || !email.includes('@')) {
+        errEl.textContent = 'Informe um e-mail válido.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Verificando...';
+      errEl.style.display = 'none';
+
+      try {
+        const url = APPS_SCRIPT_URL + '?action=verificarUsuario&email=' + encodeURIComponent(email);
+        const res = await fetch(url);
+        const json = await res.json();
+
+        if (json.ok && json.autorizado) {
+          CURRENT_USER = { email: email, nome: json.nome, cargo: json.cargo || '' };
+
+          // Salvar sessão no navegador
+          try { localStorage.setItem('bonsae_user', JSON.stringify(CURRENT_USER)); } catch(e) {}
+
+          activateApp();
+        } else {
+          errEl.textContent = json.msg || 'E-mail não autorizado. Contacte o administrador.';
+          errEl.style.display = 'block';
+        }
+      } catch(err) {
+        errEl.textContent = 'Erro de conexão: ' + err.message;
+        errEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Entrar';
+      }
+    }
+
+    function activateApp() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app-container').style.display = 'block';
+
+      // Preencher dados do usuário
+      if (CURRENT_USER) {
+        document.getElementById('solicitante').value = CURRENT_USER.nome;
+        document.getElementById('solicitante').readOnly = true;
+        document.getElementById('user-name-hdr').textContent = CURRENT_USER.nome;
+
+        // Auto-preencher mail-to com o email do usuário
+        const mailTo = document.getElementById('mail-to');
+        if (mailTo && !mailTo.value) mailTo.value = CURRENT_USER.email;
+      }
+
+      // Carregar frota
+      loadFrota();
+    }
+
+    function doLogout() {
+      CURRENT_USER = null;
+      try { localStorage.removeItem('bonsae_user'); } catch(e) {}
+      document.getElementById('app-container').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('login-email').value = '';
+      document.getElementById('solicitante').readOnly = false;
+    }
+
+    // Verificar sessão salva ao carregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        const saved = localStorage.getItem('bonsae_user');
+        if (saved) {
+          CURRENT_USER = JSON.parse(saved);
+          // Verificar se o usuário ainda é válido (silencioso)
+          fetch(APPS_SCRIPT_URL + '?action=verificarUsuario&email=' + encodeURIComponent(CURRENT_USER.email))
+            .then(r => r.json())
+            .then(json => {
+              if (json.ok && json.autorizado) {
+                CURRENT_USER.nome = json.nome; // atualizar nome caso tenha mudado
+                activateApp();
+              } else {
+                doLogout();
+              }
+            })
+            .catch(() => {
+              // Offline — permitir acesso com sessão salva
+              activateApp();
+            });
+        }
+      } catch(e) {}
+    });
+    </script>
+</body>
+
+</html>
